@@ -1,6 +1,8 @@
 
 /*
  * FitzHugh Nagumo oscillator according to Schwabedal and Pikovsky, PRE 2010
+ *
+ * Modified on Sept 8, 2014 to accomodate for the Ana/Aaron version of the equations used to study Post Inhibitory Rebound
  */
 
 
