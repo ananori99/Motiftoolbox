@@ -26,14 +26,17 @@ extern "C" {
 
 double boltzmann(const double V, const double V_0, const double k)
 {
-	return 1./(1.+exp(-k*(V-V_0)));
+	return 1./(1.+exp(-k*(V-V_0))); // this boltzman is unchanged, but will have to be applied more in modified eqns - Ana
 }
 
 
 void derivs_one(double* y, double* dxdt, const double* p)
 {
-	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]; // x' = m (x-x^3)-y+I
-	dxdt[1] = p[1]*(boltzmann(y[0], p[2], p[3])-y[1]); // y' = e (Bfun(x, x_0, k_2) - y)
+	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzman(cell2,0.3,20) + boltzman(cell3, 0.3,20))*boltzman(self,-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
+	// by the boltz dependent on all 3 cells - Ana
+	dxdt[1] = p[1]*(y[0] + a - b*y[1]); // y' = e (Bfun(x, x_0, k_2) - y) // this e is the time scale diffrence 
+	// parameter? new eqn : e*(x +a -b*y)
+	//FIND OUT WHAT a,b REPRESENT IN MATLAB CODE AND SWITCH THAT IN
 }
 
 
