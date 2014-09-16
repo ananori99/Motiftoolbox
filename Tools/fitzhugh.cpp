@@ -32,7 +32,7 @@ double boltzmann(const double V, const double V_0, const double k)
 
 void derivs_one(double* y, double* dxdt, const double* p)
 {
-	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzman(cell2,0.3,20) + boltzman(cell3, 0.3,20))*boltzman(self,-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
+	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzmann(cell2,0.3,20) + boltzmann(cell3, 0.3,20))*boltzmann(self,-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
 	// by the boltz dependent on all 3 cells - Ana
 	dxdt[1] = p[1]*(y[0] + 0.574 - 0.01*y[1]); // y' = e (Bfun(x, x_0, k_2) - y) // this e is the time scale diffrence 
 	// parameter? new eqn : e*(x +a -b*y)
