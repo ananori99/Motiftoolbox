@@ -31,13 +31,21 @@ double boltzmann(const double V, const double V_0, const double k)
 
 
 void derivs_one(double* y, double* dxdt, const double* p)
-{
-	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzmann(cell2,0.3,20) + boltzmann(cell3, 0.3,20))*boltzmann(self,-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
+{      
+	//I have aasumed there exists a y vector of doubles (I tought GPUs were in general single point presicion, so why doubles?)
+	//where the indexes are 0,1,2 corresponding to the 3 cells.
+	
+	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzmann(y[1],0.3,20) + boltzmann(y[2], 0.3,20))*boltzmann(y[0],-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
 	// by the boltz dependent on all 3 cells - Ana
-	dxdt[1] = p[1]*(y[0] + 0.574 - 0.01*y[1]); // y' = e (Bfun(x, x_0, k_2) - y) // this e is the time scale diffrence 
-	// parameter? new eqn : e*(x +a -b*y)
-	//FIND OUT WHAT a,b REPRESENT IN MATLAB CODE AND SWITCH THAT IN
-	// for now, I put in constants from my prior PIR summer work. Just to check the code will run...
+	dxdt[1] = p[1]*(y[0] + p[2] - p[3]*y[1]); 
+	// modified according to a file found stateing p[1] to be time scale seperation, p[2] the slow nul shift, p[3] the slow nul slope
+	
+	// THIS HAS GONE FROM A SINGLE STEP USED BY JUSTUS, TO A VERY UNOPTIMIZED LOOP!!!!
+	//THE REASON FOR THIS IS TO REFLECT THE MODIFICATIONS DONE TO THE MATLAB PIR, WHERE THE MULTIPLE BOLTZMANS
+	//ARE USED. AS ONE IS A CHECK ON OWN VOLTAGE, AND THAT IS RELATIVE TO WHICH CELL IS CHECKING, A LOOP MUST BE USED.
+	//
+	// THIS LOOP FORCES THE CELLS TO ALL DO THERE CHECKS SEQUENTIALLY. THIS MAY BE A PROBLEM. 
+	// For a preliminary test, there is no loop and not even all cell are used!!!! Obvoius problem, just want to run it
 }
 
 
