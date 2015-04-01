@@ -35,8 +35,11 @@ void derivs_one(double* y, double* dxdt, const double* p)
 	//I have aasumed there exists a y vector of doubles (I tought GPUs were in general single point presicion, so why doubles?)
 	//where the indexes are 0,1,2 corresponding to the 3 cells.
 	
-	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]+p[0]*(boltzmann(y[1],0.3,20) + boltzmann(y[2], 0.3,20))*boltzmann(y[0],-0.3,-20); // x' = m (x-x^3)-y+I // I did not remove m, but I is now multipled
-	// by the boltz dependent on all 3 cells - Ana
+	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]
+	// This is now simply x' = m (x-x^3)-y, the I*(triple boltzman) will be added latter in multiple itterates to account for 
+	// each cell 
+	//p[0] is I here 
+	
 	dxdt[1] = p[1]*(y[0] + p[2] - p[3]*y[1]); 
 	// modified according to a file found stateing p[1] to be time scale seperation, p[2] the slow nul shift, p[3] the slow nul slope
 	
@@ -45,7 +48,9 @@ void derivs_one(double* y, double* dxdt, const double* p)
 	//ARE USED. AS ONE IS A CHECK ON OWN VOLTAGE, AND THAT IS RELATIVE TO WHICH CELL IS CHECKING, A LOOP MUST BE USED.
 	//
 	// THIS LOOP FORCES THE CELLS TO ALL DO THERE CHECKS SEQUENTIALLY. THIS MAY BE A PROBLEM. 
-	// For a preliminary test, there is no loop and not even all cell are used!!!! Obvoius problem, just want to run it
+	// For a preliminary test, there is no loop and not even all cells are used!!!! Obvoius problem, just want to run it
+	//The loop will be implemented in lines , 
+	//as that seems to be where the values used for the figure are generated...
 }
 
 
