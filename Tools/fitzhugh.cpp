@@ -32,10 +32,10 @@ double boltzmann(const double V, const double V_0, const double k)
 
 void derivs_one(double* y, double* dxdt, const double* p)
 {      
-	//I have aasumed there exists a y vector of doubles (I tought GPUs were in general single point presicion, so why doubles?)
+	//I have asumed there exists a y vector of doubles (I tought GPUs were in general single point presicion, so why doubles?)
 	//where the indexes are 0,1,2 corresponding to the 3 cells.
 	
-	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1]
+	dxdt[0] = p[5]*(y[0]-y[0]*y[0]*y[0])-y[1];
 	// This is now simply x' = m (x-x^3)-y, the I*(triple boltzman) will be added latter in multiple itterates to account for 
 	// each cell 
 	//p[0] is I here 
@@ -86,8 +86,12 @@ void derivs_three(double* y, double* dxdt, const double* p, const double* kij)
 	bm_factor[2] = boltzmann(y[2*N_EQ1], COUPLING_THRESHOLD, THRESHOLD_SLOPE);
 
 	derivs_one(y, dxdt, p);
+	dxdt[0] += p[0]*(triple boltzman) // Ana addition. This is where the actual cell coupling happens
 	derivs_one(y+N_EQ1, dxdt+N_EQ1, p+NP1);
+	dxdt+N_EQ1[0] += I*(triple boltzman) //the coupling is done here instead of as in the Justus verision in derives_one
 	derivs_one(y+2*N_EQ1, dxdt+2*N_EQ1, p+2*NP1);
+	dxdt+2*N_EQ1[0] += I*(triple boltzman)//that is to accomodate for the fact each cell must be able to run a distinct check
+	//on its own volt. The indexes are all 0 as that corresponds to x' wherein this coupling occurs.
 
 	dxdt[0] +=       (p[4]-y[0])*            (kij[0]*bm_factor[1] + kij[1]*bm_factor[2]);
 	dxdt[N_EQ1] +=   (p[4+NP1]-y[N_EQ1])*    (kij[2]*bm_factor[0] + kij[3]*bm_factor[2]);
