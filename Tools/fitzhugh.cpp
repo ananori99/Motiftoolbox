@@ -84,7 +84,7 @@ void derivs_three(double* y, double* dxdt, const double* p, const double* kij)
 	bm_factor[0] = boltzmann(y[0],       COUPLING_THRESHOLD, THRESHOLD_SLOPE);
 	bm_factor[1] = boltzmann(y[N_EQ1],   COUPLING_THRESHOLD, THRESHOLD_SLOPE);
 	bm_factor[2] = boltzmann(y[2*N_EQ1], COUPLING_THRESHOLD, THRESHOLD_SLOPE);
-
+// these bmfactors can all be used as distinct for the triple boltzman
 	derivs_one(y, dxdt, p);
 	dxdt[0] += p[0]*(triple boltzman) // Ana addition. This is where the actual cell coupling happens
 	derivs_one(y+N_EQ1, dxdt+N_EQ1, p+NP1);
